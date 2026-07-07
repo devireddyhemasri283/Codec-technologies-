@@ -1,0 +1,152 @@
+import java.util.*;
+
+public class EventManagementApp {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static class Event {
+        int id;
+        String name;
+        int seats;
+        int booked;
+
+        Event(int id, String name, int seats) {
+            this.id = id;
+            this.name = name;
+            this.seats = seats;
+            this.booked = 0;
+        }
+    }
+
+    static ArrayList<Event> events = new ArrayList<>();
+    static int totalSales = 0;
+    static final int TICKET_PRICE = 500;
+
+    public static void main(String[] args) {
+
+        while (true) {
+            System.out.println("\n===== EVENT MANAGEMENT APP =====");
+            System.out.println("1. Create Event");
+            System.out.println("2. View Events");
+            System.out.println("3. Book Ticket");
+            System.out.println("4. Verify QR Ticket");
+            System.out.println("5. Firebase Sync");
+            System.out.println("6. Sales Analytics");
+            System.out.println("7. Exit");
+
+            System.out.print("Enter Choice: ");
+            int ch = sc.nextInt();
+
+            switch (ch) {
+                case 1:
+                    createEvent();
+                    break;
+                case 2:
+                    viewEvents();
+                    break;
+                case 3:
+                    bookTicket();
+                    break;
+                case 4:
+                    verifyTicket();
+                    break;
+                case 5:
+                    firebaseSync();
+                    break;
+                case 6:
+                    analytics();
+                    break;
+                case 7:
+                    System.exit(0);
+            }
+        }
+    }
+
+    static void createEvent() {
+        System.out.print("Event ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Event Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Total Seats: ");
+        int seats = sc.nextInt();
+
+        events.add(new Event(id, name, seats));
+
+        System.out.println("Event Created Successfully.");
+    }
+
+    static void viewEvents() {
+        if (events.isEmpty()) {
+            System.out.println("No Events Available.");
+            return;
+        }
+
+        for (Event e : events) {
+            System.out.println(
+                e.id + " | " +
+                e.name + " | Seats: " +
+                e.seats + " | Booked: " +
+                e.booked
+            );
+        }
+    }
+
+    static void bookTicket() {
+
+        System.out.print("Enter Event ID: ");
+        int id = sc.nextInt();
+
+        for (Event e : events) {
+
+            if (e.id == id) {
+
+                if (e.booked < e.seats) {
+                    e.booked++;
+                    totalSales += TICKET_PRICE;
+
+                    System.out.println("Booking Successful.");
+                    System.out.println("QR Ticket: QR" + id + "-" + e.booked);
+                } else {
+                    System.out.println("Seats Full.");
+                }
+                return;
+            }
+        }
+
+        System.out.println("Event Not Found.");
+    }
+
+    static void verifyTicket() {
+
+        sc.nextLine();
+        System.out.print("Enter QR Ticket: ");
+        String qr = sc.nextLine();
+
+        if (qr.startsWith("QR"))
+            System.out.println("Ticket Verified.");
+        else
+            System.out.println("Invalid Ticket.");
+    }
+
+    static void firebaseSync() {
+        System.out.println("Connecting to Firebase...");
+        System.out.println("Data Synced Successfully (Demo).");
+    }
+
+    static void analytics() {
+
+        System.out.println("\n===== SALES ANALYTICS =====");
+        System.out.println("Events: " + events.size());
+
+        int totalBooked = 0;
+
+        for (Event e : events)
+            totalBooked += e.booked;
+
+        System.out.println("Tickets Sold: " + totalBooked);
+        System.out.println("Total Revenue: ₹" + totalSales);
+    }
+}
