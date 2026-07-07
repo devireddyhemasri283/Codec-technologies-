@@ -1,0 +1,193 @@
+import java.util.*;
+
+public class SmartInventoryApp {
+
+    static class Product {
+        int id;
+        String name;
+        int stock;
+        double price;
+        String barcode;
+        String supplier;
+
+        Product(int id, String name, int stock, double price,
+                String barcode, String supplier) {
+            this.id = id;
+            this.name = name;
+            this.stock = stock;
+            this.price = price;
+            this.barcode = barcode;
+            this.supplier = supplier;
+        }
+    }
+
+    static ArrayList<Product> products = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        products.add(new Product(1, "Laptop", 10, 50000, "111111", "Dell"));
+        products.add(new Product(2, "Mouse", 4, 500, "222222", "Logitech"));
+        products.add(new Product(3, "Keyboard", 8, 1200, "333333", "HP"));
+
+        while (true) {
+            System.out.println("\n===== SMART INVENTORY =====");
+            System.out.println("1.Add Product");
+            System.out.println("2.View Products");
+            System.out.println("3.Sell Product");
+            System.out.println("4.Barcode Search");
+            System.out.println("5.Low Stock Alert");
+            System.out.println("6.Stock Analytics");
+            System.out.println("7.Firebase Sync");
+            System.out.println("8.Supplier List");
+            System.out.println("9.Exit");
+
+            System.out.print("Choice: ");
+            int ch = sc.nextInt();
+
+            switch (ch) {
+                case 1:
+                    addProduct();
+                    break;
+                case 2:
+                    display();
+                    break;
+                case 3:
+                    sell();
+                    break;
+                case 4:
+                    barcodeSearch();
+                    break;
+                case 5:
+                    lowStock();
+                    break;
+                case 6:
+                    analytics();
+                    break;
+                case 7:
+                    firebase();
+                    break;
+                case 8:
+                    suppliers();
+                    break;
+                case 9:
+                    System.exit(0);
+            }
+        }
+    }
+
+    static void addProduct() {
+        System.out.print("ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Stock: ");
+        int stock = sc.nextInt();
+
+        System.out.print("Price: ");
+        double price = sc.nextDouble();
+        sc.nextLine();
+
+        System.out.print("Barcode: ");
+        String barcode = sc.nextLine();
+
+        System.out.print("Supplier: ");
+        String supplier = sc.nextLine();
+
+        products.add(new Product(id, name, stock, price, barcode, supplier));
+
+        System.out.println("Product Added.");
+    }
+
+    static void display() {
+        System.out.println("\nProducts");
+        for (Product p : products) {
+            System.out.println(
+                    p.id + " " +
+                    p.name + " Stock:" +
+                    p.stock + " Price:" +
+                    p.price + " Barcode:" +
+                    p.barcode + " Supplier:" +
+                    p.supplier);
+        }
+    }
+
+    static void sell() {
+        System.out.print("Enter Product ID: ");
+        int id = sc.nextInt();
+
+        System.out.print("Quantity: ");
+        int qty = sc.nextInt();
+
+        for (Product p : products) {
+            if (p.id == id) {
+                if (p.stock >= qty) {
+                    p.stock -= qty;
+                    System.out.println("Sale Successful.");
+                    return;
+                } else {
+                    System.out.println("Not enough stock.");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Product Not Found.");
+    }
+
+    static void barcodeSearch() {
+        sc.nextLine();
+        System.out.print("Enter Barcode: ");
+        String code = sc.nextLine();
+
+        for (Product p : products) {
+            if (p.barcode.equals(code)) {
+                System.out.println("Found: " + p.name);
+                return;
+            }
+        }
+
+        System.out.println("Barcode Not Found.");
+    }
+
+    static void lowStock() {
+        System.out.println("\nLow Stock Products");
+        for (Product p : products) {
+            if (p.stock < 5) {
+                System.out.println(p.name + " -> Only " + p.stock + " Left");
+            }
+        }
+    }
+
+    static void analytics() {
+
+        int totalStock = 0;
+        double totalValue = 0;
+
+        for (Product p : products) {
+            totalStock += p.stock;
+            totalValue += p.stock * p.price;
+        }
+
+        System.out.println("Total Products : " + products.size());
+        System.out.println("Total Stock : " + totalStock);
+        System.out.println("Inventory Value : " + totalValue);
+    }
+
+    static void firebase() {
+        System.out.println("Syncing data to Firebase...");
+        System.out.println("Data Synced Successfully (Demo)");
+    }
+
+    static void suppliers() {
+
+        System.out.println("\nSupplier Details");
+
+        for (Product p : products) {
+            System.out.println(p.name + " -> " + p.supplier);
+        }
+    }
+}
